@@ -224,7 +224,7 @@ module.exports = class {
         )
       }
       //Wait 2 secs
-      await page.waitFor(2000)
+      await new Promise(resolve => setTimeout(resolve, 2000))
       if (!authFail) {
         await page.goto('https://m.facebook.com/messages', {
           waitUntil: 'networkidle2'
