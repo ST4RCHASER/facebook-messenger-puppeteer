@@ -10,7 +10,7 @@ module.exports = class {
       session: null,
       selfListen: false,
       workerLimit: 3,
-      debug: false,
+      debug: true,
       ...(options || {})
     }
     this._browser = null // Puppeteer instance
@@ -170,7 +170,8 @@ module.exports = class {
       this.options.debug && console.log('Logging in...')
 
       const browser = (this._browser = await puppeteer.launch({
-        headless: !this.options.debug
+        headless: !this.options.debug,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
       }))
       const page = (this._masterPage = (await browser.pages())[0]) // await browser.newPage())
 
@@ -178,7 +179,7 @@ module.exports = class {
         await page.setCookie(...this.options.session)
       }
 
-      // await page.setUserAgent("Mozilla/5.0 (Android 7.0; Mobile; rv:54.0) Gecko/54.0 Firefox/54.0")
+      await page.setUserAgent("Mozilla/5.0 (Android 7.0; Mobile; rv:54.0) Gecko/54.0 Firefox/54.0")
 
       // Go to the login page
       await page.goto('https://m.facebook.com/login.php', {
@@ -222,7 +223,8 @@ module.exports = class {
           'button[name=login]'
         )
       }
-
+      //Wait 2 secs
+      await page.waitFor(2000)
       if (!authFail) {
         await page.goto('https://m.facebook.com/messages', {
           waitUntil: 'networkidle2'
