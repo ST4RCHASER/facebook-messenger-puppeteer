@@ -454,8 +454,7 @@ module.exports = class {
         'Network.webSocketFrameReceived',
         async ({ timestamp, response: { payloadData } }) => {
           // FIXME: Only parse if longer than ???
-          payloadData.length > 8 &&
-            parser.parse(Buffer.from(payloadData, 'base64'))
+          payloadData.length > 8 
         }
       )
     }
